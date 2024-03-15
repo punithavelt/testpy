@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Approval Request</title>
+<style>
+    /* Reset styles */
+    body, h1, h2, p {
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Container styles */
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        background-color: #f9f9f9;
+    }
+
+    /* Header styles */
+    .header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    /* Button styles */
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 16px;
+        color: #fff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        cursor: pointer;
+        margin-right: 10px;
+    }
+
+    .button:hover {
+        background-color: #0056b3;
+    }
+	 .button.reject {
+        background-color: #dc3545;
+    }
+
+    .button:hover {
+        background-color: #0056b3;
+    }
+
+    .button.reject:hover {
+        background-color: #c82333;
+    }
+
+
+    /* Table styles */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    th, td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    /* Footer styles */
+    .footer {
+        text-align: center;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Approval Request</h1>
+    </div>
+    <p>Dear [RECIEVER_NAME],</p>
+    <p>I hope this email finds you well. I am writing to seek your approval on the following matter:</p>
+    <table>
+        <tr>
+            <th>Job Name</th>
+            <td>[JOBNAME]</td>
+        </tr>
+        <tr>
+            <th>Job ID</th>
+            <td>[JOBID]</td>
+        </tr>
+        <tr>
+            <th>Date of Request</th>
+            <td>[DATE]</td>
+        </tr>
+        <tr>
+            <th>Valid Until</th>
+            <td>[VALID_DATE]</td>
+        </tr>
+    </table>
+    <p>Please review the request and click on one of the buttons below to indicate your decision:</p>
+    <a href="mailto:your@email.com?subject=Approval%20Granted&body=Dear%20[Your%20Name],%0D%0A%0D%0AThank%20you%20for%20your%20approval.%20The%20request%20has%20been%20approved.%0D%0A%0D%0ABest%20regards,%0D%0A[Recipient's%20Name]" class="button approve">Approve</a>
+    <a href="mailto:your@email.com?subject=Rejection%20Notice&body=Dear%20[Your%20Name],%0D%0A%0D%0AThank%20you%20for%20your%20consideration.%20The%20request%20has%20been%20rejected.%0D%0A%0D%0ABest%20regards,%0D%0A[Recipient's%20Name]" class="button reject">Reject</a>
+    <div class="footer">
+        <p>Thank you for your prompt attention to this matter.</p>
+        <p>Best regards,<br>[REQUESTER_NAME]</p>
+    </div>
+</div>
+
+</body>
+</html>
