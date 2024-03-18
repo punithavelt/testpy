@@ -44,7 +44,6 @@ def get_subjects():
 if __name__ == "__main__":
     subjects = get_subjects()
     if subjects:
-       // print("Subjects found:", subjects)
       print('OK')
        
     else:
