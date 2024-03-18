@@ -1,0 +1,112 @@
+
+pipeline {
+    agent any
+    
+    options {
+        skipDefaultCheckout(true) 
+    }
+    
+    environment {
+        MAILTEMPLATE = '' // Define MAILTEMPLATE variable
+     }
+
+    stages {
+        stage('Initialization') {
+            steps {
+                cleanWs()
+            }
+        }
+        stage('Fetch Scripts') {
+            steps {
+                // Clone the "scripts" Git repository
+                git branch: 'main', url: 'https://github.com/punithavelt/testpy.git'
+                script {
+                    // Define the absolute path to the file or use workspace
+                    def file = new File("${workspace}/mailtemplate.html")
+                    def htmlContent = file.text
+                    
+                 //   htmlContent = htmlContent.replaceAll("[RECIEVER_NAME]", 'himachal')
+                 //   htmlContent = htmlContent.replaceAll("[JOBNAME]", 'himachal')
+                    def approvalUrl = currentBuild.absoluteUrl + 'input/'
+                    echo "Approval URL: ${approvalUrl}"
+                    echo "BUILD_URL: ${BUILD_URL}"
+                    MAILTEMPLATE = htmlContent // Overwrite MAILID for validation
+                    emailext body: MAILTEMPLATE, subject: 'Approval Request', to: 'tech@thestagings.com'
+                  }
+                
+            }
+        }
+        stage('Fetch Release Notes') {
+            steps {
+                // Clone the "scripts" Git repository
+                git branch: 'master', credentialsId: 'RELEASENOTE2', url: 'ssh://gitolite@34.80.74.159/leykart-release-notes'
+               
+            }
+        }
+         stage('Approval 1') {
+            steps {
+               
+                 
+              sh "pwd"
+                sh "ls"
+               
+                echo "I am approval 1"
+                 echo "${MAILTEMPLATE}"
+                // Access release notes and scripts from the shared location
+                // Perform actions or checks specific to Approval 1
+                
+                
+                 script {
+                    // Pause the pipeline and prompt for approval
+                    def userInput = input(
+                        id: 'userInput',
+                        message: 'Do you approve this deployment?',
+                        parameters: [
+                            booleanParam(defaultValue: false, description: 'Approve or reject?')
+                        ]
+                    )
+                    
+                    // Check if user approved
+                    if (userInput) {
+                        echo 'Deployment approved!'
+                        // Proceed with deployment logic
+                    } else {
+                        error 'Deployment rejected!'
+                    }
+                }
+                
+                
+            }
+        }
+        
+        
+       
+        stage('Approval 2') {
+            steps {
+                sh "pwd"
+                 sh "ls"
+                echo "I am approval 2"
+                // Access release notes and scripts from the shared location
+                // Perform actions or checks specific to Approval 2
+            }
+        }
+        stage('Approval 3') {
+            steps {
+                sh "pwd"
+                  sh "ls"
+                echo "I am approval "
+                 // Access release notes and scripts from the shared location
+                // Perform actions or checks specific to Approval 3
+            }
+        }
+        stage('Deploy Code') {
+            steps {
+                sh "pwd"
+                  sh "ls"
+                echo "I am Deploy Code. Final step"
+                // Access release notes and scripts from the shared location
+                // Perform code deployment using scripts or commands from the repository
+            }
+        }
+    }
+}
