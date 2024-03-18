@@ -1,16 +1,11 @@
 import imaplib
 from email.header import decode_header
-from jenkinsapi.jenkins import Jenkins
 
 # Email settings
 EMAIL = 'tech@thestagings.com'
 PASSWORD = 'v52V9f4cD'
 IMAP_SERVER = 'imap.marissa.metanet.ch'
 
-# Jenkins settings
-JENKINS_URL = 'http://www1.jenkins.com:32769/'
-JENKINS_USERNAME = 'admin'
-JENKINS_PASSWORD = 'admin@123'
 SPECIFIC_SUBJECT = 'Approval Granted test-pipeline'
 
 def get_subjects():
