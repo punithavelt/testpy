@@ -56,7 +56,7 @@ if __name__ == "__main__":
     SPECIFIC_SUBJECT = sys.argv[1]
     SPECIFIC_RECEIVER = sys.argv[2]
     subjects = get_subjects()
-    valid = validate_email(SPECIFIC_SUBJECT, SPECIFIC_RECEIVER,subjects)
+    valid = validate_email(SPECIFIC_SUBJECT, SPECIFIC_RECEIVER)
     if valid:
         if subjects:
             print(subjects)
