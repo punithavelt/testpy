@@ -24,7 +24,7 @@ def get_subjects():
     #result, data = mail.search(None, '(SUBJECT "test mail")')
 
     search_criteria = '(FROM "{}" SUBJECT "{}")'.format(SPECIFIC_RECEIVER, SPECIFIC_SUBJECT)
-    result, data = mail.search(None, '(UNSEEN SUBJECT "{}")'.format(search_criteria))
+    result, data = mail.search(None, search_criteria)
     subjects = []
 
     if result == 'OK':
