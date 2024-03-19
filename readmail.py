@@ -10,7 +10,7 @@ IMAP_SERVER = 'imap.marissa.metanet.ch'
 SPECIFIC_SUBJECT = ''
 
 def validate_email(subject, receiver_email):
-    return true
+    return True
     
 
 def get_subjects():
