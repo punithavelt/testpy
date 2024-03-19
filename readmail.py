@@ -1,4 +1,4 @@
-
+import sys
 import imaplib
 from email.header import decode_header
 
@@ -10,8 +10,7 @@ IMAP_SERVER = 'imap.marissa.metanet.ch'
 SPECIFIC_SUBJECT = ''
 
 def validate_email(subject, receiver_email):
-    # Your validation logic here
-    #print(f"Validating email with subject: {subject} and receiver email: {receiver_email}")
+    return true
     
 
 def get_subjects():
@@ -52,14 +51,16 @@ def get_subjects():
  
 if __name__ == "__main__":
     if len(sys.argv) != 3:
-        print("Usage: python validate_email.py <subject> <receiver_email>")
+        print("Usage: python validate_email <subject> <receiver_email>")
         sys.exit(1)
     SPECIFIC_SUBJECT = sys.argv[1]
     SPECIFIC_RECEIVER = sys.argv[2]
     subjects = get_subjects()
-    validate_email(SPECIFIC_SUBJECT, SPECIFIC_RECEIVER,subjects)
-    if subjects:
-      print(subjects)
-       
+    valid = validate_email(SPECIFIC_SUBJECT, SPECIFIC_RECEIVER,subjects)
+    if valid:
+        if subjects:
+            print(subjects)
+        else:
+            print('ERROR')
     else:
         print('ERROR')
