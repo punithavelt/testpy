@@ -8,6 +8,7 @@ pipeline {
     
     environment {
         MAILTEMPLATE = '' // Define MAILTEMPLATE variable
+       
      }
 
     stages {
@@ -27,19 +28,21 @@ pipeline {
                     
                  //   htmlContent = htmlContent.replaceAll("[RECIEVER_NAME]", 'himachal')
                  //   htmlContent = htmlContent.replaceAll("[JOBNAME]", 'himachal')
+                    echo "BUILD_URL: ${BUILD_URL}"
                     def approvalUrl = currentBuild.absoluteUrl + 'input/'
                     echo "Approval URL: ${approvalUrl}"
-                    echo "BUILD_URL: ${BUILD_URL}"
-                    MAILTEMPLATE = htmlContent // Overwrite MAILID for validation
-                    emailext body: MAILTEMPLATE, subject: 'Approval Request', to: 'tech@thestagings.com'
+                     MAILTEMPLATE = htmlContent // Overwrite MAILID for validation
+                    emailext body: MAILTEMPLATE, subject: 'Approval Request ${JOB_NAME}', to: 'tech@thestagings.com'
                   }
                 
             }
         }
         stage('Fetch Release Notes') {
             steps {
+                sh "pwd"
+                sh "ls"
                 // Clone the "scripts" Git repository
-                git branch: 'master', credentialsId: 'RELEASENOTE2', url: 'ssh://gitolite@34.80.74.159/leykart-release-notes'
+              //  git branch: 'master', credentialsId: 'RELEASENOTE2', url: 'ssh://gitolite@34.80.74.159/leykart-release-notes'
                
             }
         }
@@ -47,11 +50,11 @@ pipeline {
             steps {
                
                  
-              sh "pwd"
-                sh "ls"
+            //  sh "pwd"
+             //   sh "ls"
                
-                echo "I am approval 1"
-                 echo "${MAILTEMPLATE}"
+              //  echo "I am approval 1"
+             //    echo "${MAILTEMPLATE}"
                 // Access release notes and scripts from the shared location
                 // Perform actions or checks specific to Approval 1
                 
@@ -61,8 +64,8 @@ pipeline {
                     def userInput = input(
                         id: 'userInput',
                         message: 'Do you approve this deployment?',
-                        parameters: [
-                            booleanParam(defaultValue: false, description: 'Approve or reject?')
+                         parameters: [
+                            booleanParam(name: 'Comments', defaultValue: false, description: 'Approve or reject?')
                         ]
                     )
                     
@@ -83,11 +86,27 @@ pipeline {
        
         stage('Approval 2') {
             steps {
-                sh "pwd"
-                 sh "ls"
-                echo "I am approval 2"
-                // Access release notes and scripts from the shared location
-                // Perform actions or checks specific to Approval 2
+                timeout(time: 10, unit: 'MINUTES') { // Set a maximum duration for the pipeline execution
+                    script {
+                        boolean approvalReceived = false
+                        while (!approvalReceived) {
+                            def approvalResponse = sh(script: 'python3 readmail.py', returnStdout: true).trim()
+                            if (approvalResponse == 'OK') {
+                                approvalReceived = true
+                              //  build job: 'Name_of_Your_Other_Job', parameters: [
+                              //      string(name: 'PARAMETER_NAME', value: 'PARAMETER_VALUE')
+                                    // Add more parameters if needed
+                              //  ]
+                            } else if (approvalResponse == 'REJECT') {
+                                approvalReceived = true
+                                echo 'Approval rejected. Deployment halted.'
+                            } else {
+                                echo 'No response yet. Waiting...'
+                                sleep 60 // Wait for 5 minutes before checking again
+                            }
+                        }
+                    }
+                }
             }
         }
         stage('Approval 3') {
@@ -101,9 +120,9 @@ pipeline {
         }
         stage('Deploy Code') {
             steps {
-                sh "pwd"
-                  sh "ls"
-                echo "I am Deploy Code. Final step"
+          //      sh "pwd"
+            //      sh "ls"
+              echo "I am Deploy Code. Final step"
                 // Access release notes and scripts from the shared location
                 // Perform code deployment using scripts or commands from the repository
             }
