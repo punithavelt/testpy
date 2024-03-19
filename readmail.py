@@ -11,7 +11,6 @@ SPECIFIC_SUBJECT = ''
 
 def validate_email(subject, receiver_email):
     return True
-    
 
 def get_subjects():
     # Connect to the mail server
