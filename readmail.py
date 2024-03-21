@@ -63,5 +63,6 @@ if __name__ == "__main__":
    SPECIFIC_SUBJECT = sys.argv[1]
    SPECIFIC_RECEIVER = sys.argv[2]
    REPLY_SUBJECT = sys.argv[1]
-   print(sys.argv)
+   subjects = get_subjects()
+   print(subjects)
    
