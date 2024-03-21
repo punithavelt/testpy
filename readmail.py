@@ -53,16 +53,14 @@ def get_subjects():
 
  
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
+   if len(sys.argv) != 3:
        print(sys.argv)
        print("Usage: python validate_email <subject> <receiver_email>")
        sys.exit(1)
-    #SPECIFIC_SUBJECT = sys.argv[1]
-    #REJECT_SUBJECT = sys.argv[1]
-    #SPECIFIC_RECEIVER = sys.argv[2]
-    SPECIFIC_SUBJECT = "Approved test-pipeline 150 BUILD"
+    SPECIFIC_SUBJECT = "Approved test-pipeline 140 BUILD"
     SPECIFIC_RECEIVER = "punithavel@thestagings.com"
-    REJECT_SUBJECT = "Rejected test-pipeline 150 BUILD"
+    SPECIFIC_SUBJECT = sys.argv[1]
+    SPECIFIC_RECEIVER = sys.argv[2]
+    REPLY_SUBJECT = sys.argv[1]
     subjects = get_subjects()
     print(subjects)
-     
