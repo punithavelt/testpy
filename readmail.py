@@ -10,9 +10,6 @@ IMAP_SERVER = 'imap.marissa.metanet.ch'
 
 SPECIFIC_SUBJECT = ''
 
-def validate_email(subject, receiver_email):
-    return True
-
 def get_subjects():
     # Connect to the mail server
     mail = imaplib.IMAP4_SSL(IMAP_SERVER)
@@ -24,33 +21,35 @@ def get_subjects():
     
     search_criteria = '(FROM "{}" SUBJECT "{}")'
     #result, data = mail.search(None, '(SUBJECT "{}")'.format(SPECIFIC_SUBJECT))
-    result, data = mail.search(None, '(FROM "{}" SUBJECT "{}")'.format(SPECIFIC_RECEIVER, SPECIFIC_SUBJECT))
+    # result, data = mail.search(None, '(FROM "{}" SUBJECT "{}")'.format(SPECIFIC_RECEIVER, SPECIFIC_SUBJECT))
+    result, data = mail.search(None, '(UNSEEN FROM "{}")'.format(SPECIFIC_RECEIVER))
     subjects = []
     
     if result == 'OK':
-             for num in data[0].split():
-                # Fetch the email with the specified ID
-                _, messages = mail.fetch(num, '(RFC822)')
-                # Parse the email message
-                msg = email.message_from_bytes(messages[0][1])
-                # Check if the email contains the specific text in the body
-              #  if SPECIFIC_TEXT in msg.get_payload():
-                subtext = msg.get('Subject')
-                 
-                if SPECIFIC_SUBJECT in subtext:
-                  return 'OK'
+         for num in data[0].split():
+            # Fetch the email with the specified ID
+            _, messages = mail.fetch(num, '(RFC822)')
+            # Parse the email message
+            msg = email.message_from_bytes(messages[0][1])
+            # Check if the email contains the specific text in the body
+          #  if SPECIFIC_TEXT in msg.get_payload():
+            subtext = msg.get('Subject')
+             
+            if SPECIFIC_SUBJECT in subtext:
+              return 'OK'
+            if REJECT_SUBJECT in subtext:
+              return 'REJECT'
+            try:
+                subject = decode_header(messages[0][1].decode('utf-8'))[0][0]
+                if isinstance(subject, bytes):
+                    subject = subject.decode('utf-8')
+                subjects.append(subject)
                 
-                try:
-                    subject = decode_header(messages[0][1].decode('utf-8'))[0][0]
-                    if isinstance(subject, bytes):
-                        subject = subject.decode('utf-8')
-                    subjects.append(subject)
-                    
-                except Exception as e:
-                    print(f"Error decoding subject: {e}")
+            except Exception as e:
+                print(f"Error decoding subject: {e}")
     mail.close()
     mail.logout()
-    return 'ERROR'
+    return 'LOOP'
 
  
 if __name__ == "__main__":
@@ -62,8 +61,5 @@ if __name__ == "__main__":
     SPECIFIC_SUBJECT = sys.argv[1]
     SPECIFIC_RECEIVER = sys.argv[2]
     subjects = get_subjects()
-    valid = validate_email(SPECIFIC_SUBJECT, SPECIFIC_RECEIVER)
-    if valid:
-        return subjects
-    else:
-        print('ERROR')
+    print(subjects)
+     
