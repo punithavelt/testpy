@@ -5,7 +5,7 @@ from email.header import decode_header
 
 # Email settings test
 EMAIL = 'tech@thestagings.com'
-PASSWORD = 'v52V9f4cD'
+PASSWORD = 'HIDDENPASSWORDHERE'
 IMAP_SERVER = 'imap.marissa.metanet.ch'
 
 SPECIFIC_SUBJECT = ''
