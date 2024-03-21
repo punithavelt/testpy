@@ -46,7 +46,7 @@ def get_subjects():
                 subjects.append(subject)
                 
             except Exception as e:
-                print(f"Error decoding subject: {e}")
+                print(f"ERROR")
     mail.close()
     mail.logout()
     return 'LOOP'
