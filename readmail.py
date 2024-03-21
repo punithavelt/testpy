@@ -58,10 +58,10 @@ if __name__ == "__main__":
        print("Usage: python validate_email <subject> <receiver_email>")
        sys.exit(1)
     
-    SPECIFIC_SUBJECT = "Approved test-pipeline 140 BUILD"
-    SPECIFIC_RECEIVER = "punithavel@thestagings.com"
-    SPECIFIC_SUBJECT = sys.argv[1]
-    SPECIFIC_RECEIVER = sys.argv[2]
-    REPLY_SUBJECT = sys.argv[1]
-    print(sys)
-    print(subjects)
+   SPECIFIC_SUBJECT = "Approved test-pipeline 140 BUILD"
+   SPECIFIC_RECEIVER = "punithavel@thestagings.com"
+   SPECIFIC_SUBJECT = sys.argv[1]
+   SPECIFIC_RECEIVER = sys.argv[2]
+   REPLY_SUBJECT = sys.argv[1]
+   print(sys)
+   print(subjects)
