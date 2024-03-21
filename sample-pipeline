@@ -8,7 +8,25 @@ pipeline {
     
     environment {
         MAILTEMPLATE = '' // Define MAILTEMPLATE variable
-       
+        MAILID = '' // Define MAILID variable
+        TO_EMAIL = 'tech@thestagings.com'
+        
+        APP1_RECIEVER_NAME = 'Srinivasan'
+        APP1_RECIEVER_EMAIL= 'punithavel@thestagings.com'
+        APP2_RECIEVER_NAME = 'Raghavi'
+        APP2_RECIEVER_EMAIL= 'punithavel@thestagings.com'
+        APP3_RECIEVER_NAME = 'Punithavel'
+        APP3_RECIEVER_EMAIL = 'punithavel@thestagings.com'
+        JOBNAME = "${JOB_NAME}"
+        JOBID = "${BUILD_ID}"
+        JOBURL="${BUILD_URL}"
+        REQUESTER_NAME="Punithavel"
+        CURRENT_DATE_TIME = ''
+        FUTURE_DATE_TIME = ''
+        SUBJECT = "Approval Request ${JOB_NAME} ${BUILD_ID}"
+        REJECT_SUBJECT = "Rejected ${JOB_NAME} ${BUILD_ID} BUILD"
+        APPROVE_SUBJECT = "${JOB_NAME} ${BUILD_ID}"
+        REPLY_SUBJECT = "Approved ${JOB_NAME} ${BUILD_ID} BUILD"
      }
 
     stages {
@@ -17,80 +35,180 @@ pipeline {
                 cleanWs()
             }
         }
+		stage('Get Date and Time') {
+            steps {
+                script {
+                    def currentDateTime = java.time.LocalDateTime.now()
+                    def futureDateTime = currentDateTime.plusHours(8)
+                    def formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+                    CURRENT_DATE_TIME = currentDateTime.format(formatter)
+                    FUTURE_DATE_TIME = futureDateTime.format(formatter)
+                }
+            }
+        }
         stage('Fetch Scripts') {
             steps {
-                // Clone the "scripts" Git repository
                 git branch: 'main', url: 'https://github.com/punithavelt/testpy.git'
                 script {
+                    
+                    sh "mv -f ${workspace}/readmail.py /var/jenkins_home/mailreader"
                     // Define the absolute path to the file or use workspace
                     def file = new File("${workspace}/mailtemplate.html")
                     def htmlContent = file.text
-                    
-                 //   htmlContent = htmlContent.replaceAll("[RECIEVER_NAME]", 'himachal')
-                 //   htmlContent = htmlContent.replaceAll("[JOBNAME]", 'himachal')
-                    echo "BUILD_URL: ${BUILD_URL}"
-                    def approvalUrl = currentBuild.absoluteUrl + 'input/'
-                    echo "Approval URL: ${approvalUrl}"
-                     MAILTEMPLATE = htmlContent // Overwrite MAILID for validation
-                    emailext body: MAILTEMPLATE, subject: 'Approval Request ${JOB_NAME}', to: 'tech@thestagings.com'
-                  }
+                  //  htmlContent = htmlContent.replaceAll("\\[REJECT_TEXT\\]", REJECT_SUBJECT)
+                   // htmlContent = htmlContent.replaceAll("\\[APPROVED_TEXT\\]", APPROVE_SUBJECT)
+                    //htmlContent = htmlContent.replaceAll("\\[RECIEVER_NAME\\]", APP1_RECIEVER_NAME)
+                    htmlContent = htmlContent.replaceAll("\\[JOBNAME\\]", JOBNAME)
+                    htmlContent = htmlContent.replaceAll("\\[JOBID\\]", JOBID)
+                    htmlContent = htmlContent.replaceAll("\\[DATE\\]", CURRENT_DATE_TIME)
+                    htmlContent = htmlContent.replaceAll("\\[VALID_DATE\\]", FUTURE_DATE_TIME)
+                    htmlContent = htmlContent.replaceAll("\\[RECIEVER_NAME\\]", REQUESTER_NAME)
+                    htmlContent = htmlContent.replaceAll("\\[JOBURL\\]", JOBURL)
+                    htmlContent = htmlContent.replaceAll("\\[TO_EMAIL\\]", TO_EMAIL)
+                    htmlContent = htmlContent.replaceAll("\\[REQUESTER_NAME\\]", REQUESTER_NAME)
+
+                    MAILTEMPLATE = htmlContent // Overwrite MAILID for validation
+                 }
                 
             }
         }
         stage('Fetch Release Notes') {
             steps {
-                sh "pwd"
-                sh "ls"
-                // Clone the "scripts" Git repository
-              //  git branch: 'master', credentialsId: 'RELEASENOTE2', url: 'ssh://gitolite@34.80.74.159/leykart-release-notes'
-               
-            }
+               // echo "${workspace}"
+               // Placeholder step to prevent error
+                git branch: 'main', url: 'https://github.com/punithavelphp/releasenotes.git'
+			}
         }
          stage('Approval 1') {
+		   
             steps {
-               
-                 
-            //  sh "pwd"
-             //   sh "ls"
-               
-              //  echo "I am approval 1"
-             //    echo "${MAILTEMPLATE}"
-                // Access release notes and scripts from the shared location
-                // Perform actions or checks specific to Approval 1
-                
-                
-                 script {
-                    // Pause the pipeline and prompt for approval
-                    def userInput = input(
-                        id: 'userInput',
-                        message: 'Do you approve this deployment?',
-                         parameters: [
-                            booleanParam(name: 'Comments', defaultValue: false, description: 'Approve or reject?')
-                        ]
-                    )
+                  script {
+                    htmlContent = MAILTEMPLATE
                     
-                    // Check if user approved
-                    if (userInput) {
+                    htmlContent = htmlContent.replaceAll("\\[RECIEVER_NAME\\]", APP1_RECIEVER_NAME)
+                    htmlContent = htmlContent.replaceAll("\\[Recipient_Name\\]", APP1_RECIEVER_NAME)
+                
+                    emailext(
+    					to: APP1_RECIEVER_EMAIL,
+    					subject: SUBJECT,
+    					body: htmlContent,
+    					mimeType: 'text/html',
+    					attachmentsPattern: '**/release-notes.docx'  // Specify the path to the release notes file
+    				)
+                      def userInput = input(
+                        id: 'userInput',
+                        message: 'Do you approve this deployment?' 
+                    )
+                     // Check if user approved
+                 /*   if (userInput) {
                         echo 'Deployment approved!'
                         // Proceed with deployment logic
                     } else {
                         error 'Deployment rejected!'
-                    }
+                    } */
+                }
+                
+                
+            }
+        }
+         stage('Approval 1 - 1') {
+		   
+            steps {
+                  script {
+                    htmlContent = MAILTEMPLATE
+                    
+                    htmlContent = htmlContent.replaceAll("\\[RECIEVER_NAME\\]", APP2_RECIEVER_EMAIL)
+                    htmlContent = htmlContent.replaceAll("\\[Recipient_Name\\]", APP2_RECIEVER_EMAIL)
+                
+                    emailext(
+    					to: APP2_RECIEVER_EMAIL,
+    					subject: SUBJECT,
+    					body: htmlContent,
+    					mimeType: 'text/html',
+    					attachmentsPattern: '**/release-notes.docx'  // Specify the path to the release notes file
+    				)
+                      def userInput = input(
+                        id: 'userInput',
+                        message: 'Do you approve this deployment?' 
+                    )
+                     // Check if user approved
+                 /*   if (userInput) {
+                        echo 'Deployment approved!'
+                        // Proceed with deployment logic
+                    } else {
+                        error 'Deployment rejected!'
+                    } */
                 }
                 
                 
             }
         }
         
-        
        
         stage('Approval 2') {
             steps {
+                script {
+                htmlContent = MAILTEMPLATE
+                htmlContent = htmlContent.replaceAll("\\[RECIEVER_NAME\\]", APP1_RECIEVER_NAME)
+                htmlContent = htmlContent.replaceAll("\\[Recipient_Name\\]", APP1_RECIEVER_NAME)
+                
+                    emailext(
+    					to: APP1_RECIEVER_EMAIL,
+    					subject: SUBJECT,
+    					body: htmlContent,
+    					mimeType: 'text/html',
+    					attachmentsPattern: '**/release-notes.docx'  // Specify the path to the release notes file
+    				)
+                }
+			    
+
+				sleep 60 // sleep for a minute
                 timeout(time: 10, unit: 'MINUTES') { // Set a maximum duration for the pipeline execution
                     script {
                         boolean approvalReceived = false
                         while (!approvalReceived) {
-                            def approvalResponse = sh(script: 'python3 readmail.py', returnStdout: true).trim()
+                            def approvalResponse = sh(script: "python3 /var/jenkins_home/mailreader/readmail.py '${REPLY_SUBJECT}' '${REJECT_SUBJECT}' '${APP1_RECIEVER_EMAIL}'", returnStdout: true).trim()
+                           echo approvalResponse
+                            if (approvalResponse == 'OK') {
+                                approvalReceived = true
+                              //  build job: 'Name_of_Your_Other_Job', parameters: [
+                              //      string(name: 'PARAMETER_NAME', value: 'PARAMETER_VALUE')
+                                    // Add more parameters if needed
+                              //  ]
+                            } else if (approvalResponse == 'REJECT') {
+                                approvalReceived = true
+                                echo 'Approval rejected. Deployment halted.'
+                            } else {
+                                echo 'No response yet. Waiting...'
+                                sleep 60 // Wait for 5 minutes before checking again
+                            }
+                        }
+                    }
+                }
+                
+            }
+        }
+        stage('Approval 3') {
+            steps {
+                script {
+                    htmlContent = MAILTEMPLATE
+                    htmlContent = htmlContent.replaceAll("\\[RECIEVER_NAME\\]", APP2_RECIEVER_NAME)
+                    htmlContent = htmlContent.replaceAll("\\[Recipient_Name\\]", APP2_RECIEVER_NAME)
+                     emailext(
+    					to: APP2_RECIEVER_EMAIL,
+    					subject: SUBJECT,
+    					body: htmlContent,
+    					mimeType: 'text/html',
+    					attachmentsPattern: '**/release-notes.docx'  // Specify the path to the release notes file
+    				)
+				
+                 }
+				
+                timeout(time: 10, unit: 'MINUTES') { // Set a maximum duration for the pipeline execution
+                    script {
+                        boolean approvalReceived = false
+                        while (!approvalReceived) {
+                            def approvalResponse = sh(script: "python3 /var/jenkins_home/mailreader/readmail.py '${REPLY_SUBJECT}' '${REJECT_SUBJECT}' '${APP2_RECIEVER_NAME}'", returnStdout: true).trim()
                             if (approvalResponse == 'OK') {
                                 approvalReceived = true
                               //  build job: 'Name_of_Your_Other_Job', parameters: [
@@ -109,22 +227,10 @@ pipeline {
                 }
             }
         }
-        stage('Approval 3') {
-            steps {
-                sh "pwd"
-                  sh "ls"
-                echo "I am approval "
-                 // Access release notes and scripts from the shared location
-                // Perform actions or checks specific to Approval 3
-            }
-        }
         stage('Deploy Code') {
             steps {
-          //      sh "pwd"
-            //      sh "ls"
-              echo "I am Deploy Code. Final step"
-                // Access release notes and scripts from the shared location
-                // Perform code deployment using scripts or commands from the repository
+                 echo "COMPLETED"
+                 sh "ls"
             }
         }
     }
