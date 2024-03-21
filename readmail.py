@@ -3,7 +3,7 @@ import email
 import imaplib
 from email.header import decode_header
 
-# Email settings
+# Email settings test
 EMAIL = 'tech@thestagings.com'
 PASSWORD = 'v52V9f4cD'
 IMAP_SERVER = 'imap.marissa.metanet.ch'
