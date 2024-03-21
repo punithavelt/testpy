@@ -62,13 +62,11 @@ if __name__ == "__main__":
 
        sys.exit(1)
 
-   SPECIFIC_SUBJECT = "Approved test-pipeline 140 BUILD"
+   
 
-   SPECIFIC_RECEIVER = "punithavel@thestagings.com"
-
-    # SPECIFIC_SUBJECT = sys.argv[1]
-
-    # SPECIFIC_RECEIVER = sys.argv[2]
+    SPECIFIC_SUBJECT = sys.argv[1]
+    REJECT_SUBJECT = sys.argv[1]
+    SPECIFIC_RECEIVER = sys.argv[2]
 
    subjects = get_subjects()
 
