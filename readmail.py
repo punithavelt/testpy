@@ -62,7 +62,7 @@ if __name__ == "__main__":
    SPECIFIC_RECEIVER = "punithavel@thestagings.com"
    SPECIFIC_SUBJECT = sys.argv[1]
    SPECIFIC_RECEIVER = sys.argv[2]
-   REPLY_SUBJECT = sys.argv[1]
+   REJECT_SUBJECT = sys.argv[1]
    subjects = get_subjects()
    print(subjects)
    
