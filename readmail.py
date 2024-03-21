@@ -50,7 +50,7 @@ def get_subjects():
                     print(f"Error decoding subject: {e}")
     mail.close()
     mail.logout()
-    return FALSE
+    return 'ERROR'
 
  
 if __name__ == "__main__":
@@ -64,9 +64,6 @@ if __name__ == "__main__":
     subjects = get_subjects()
     valid = validate_email(SPECIFIC_SUBJECT, SPECIFIC_RECEIVER)
     if valid:
-        if subjects:
-            print(subjects)
-        else:
-            print('ERROR1')
+        return subjects
     else:
-        print('ERROR2')
+        print('ERROR')
