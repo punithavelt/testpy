@@ -38,7 +38,7 @@ def get_subjects():
                 subtext = msg.get('Subject')
                  
                 if SPECIFIC_SUBJECT in subtext:
-                  return True
+                  return 'OK'
                 
                 try:
                     subject = decode_header(messages[0][1].decode('utf-8'))[0][0]
@@ -50,7 +50,7 @@ def get_subjects():
                     print(f"Error decoding subject: {e}")
     mail.close()
     mail.logout()
-    return True
+    return FALSE
 
  
 if __name__ == "__main__":
