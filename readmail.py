@@ -24,7 +24,7 @@ def get_subjects():
     
     search_criteria = '(FROM "{}" SUBJECT "{}")'
     #result, data = mail.search(None, '(SUBJECT "{}")'.format(SPECIFIC_SUBJECT))
-    result, data = mail.search(None, '(FROM "{}" SUBJECT "{}")'.format(SPECIFIC_RECEIVER, SPECIFIC_SUBJECT))
+    result, data = mail.search(None, '(UNSEEN FROM "{}" SUBJECT "{}")'.format(SPECIFIC_RECEIVER, SPECIFIC_SUBJECT))
     subjects = []
     
     if result == 'OK':
@@ -50,11 +50,13 @@ def get_subjects():
 
  
 if __name__ == "__main__":
-  #  if len(sys.argv) != 3:
-   #     print("Usage: python validate_email <subject> <receiver_email>")
-    #    sys.exit(1)
-    SPECIFIC_SUBJECT = "Approved test-pipeline 139 BUILD"
-    SPECIFIC_RECEIVER = "punithavel@thestagings.com"
+    if len(sys.argv) != 3:
+        print("Usage: python validate_email <subject> <receiver_email>")
+        sys.exit(1)
+    #SPECIFIC_SUBJECT = "Approved test-pipeline 139 BUILD"
+    #SPECIFIC_RECEIVER = "punithavel@thestagings.com"
+    SPECIFIC_SUBJECT = sys.argv[1]
+    SPECIFIC_RECEIVER = sys.argv[2]
     subjects = get_subjects()
     valid = validate_email(SPECIFIC_SUBJECT, SPECIFIC_RECEIVER)
     if valid:
